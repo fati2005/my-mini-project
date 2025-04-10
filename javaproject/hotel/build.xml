@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="hotel" default="default" basedir=".">
+    <description>Builds, tests, and runs the project hotel with JaCoCo.</description>
+
+    <import file="nbproject/build-impl.xml"/>
+
+    <!-- Define JaCoCo properties -->
+    <property name="jacoco.agent.jar" location="${basedir}/lib/jacocoagent.jar"/>
+    <property name="jacoco.report.dir" location="${basedir}/jacoco-report"/>
+    <property name="jacoco.exec.file" location="${jacoco.report.dir}/jacoco.exec"/>
+
+    <!-- Clean previous JaCoCo reports -->
+    <target name="clean-jacoco">
+        <delete dir="${jacoco.report.dir}"/>
+    </target>
+
+    <!-- Run tests with JaCoCo agent and include JUnit -->
+    <target name="test-with-jacoco" depends="clean-jacoco, test">
+        <junit fork="true">
+            <jvmarg value="-javaagent:${jacoco.agent.jar}=destfile=${jacoco.exec.file}"/>
+            <classpath>
+                <fileset dir="lib">
+                    <include name="**/junit*.jar"/>
+                    <include name="**/hamcrest*.jar"/>
+                </fileset>
+                <pathelement path="${build.classes.dir}"/>
+            </classpath>
+            <batchtest>
+                <fileset dir="test">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <!-- Generate JaCoCo report -->
+    <target name="jacoco-report" depends="test-with-jacoco">
+        <mkdir dir="${jacoco.report.dir}"/>
+        <taskdef name="jacocoReport" classname="org.jacoco.ant.ReportTask" classpath="${basedir}/lib/jacocoant.jar"/>
+        <jacocoReport>
+            <executiondata>
+                <file file="${jacoco.exec.file}"/>
+            </executiondata>
+            <structure name="hotel">
+                <classfiles>
+                    <fileset dir="${build.classes.dir}"/>
+                </classfiles>
+                <sourcefiles>
+                    <fileset dir="${src.dir}"/>
+                </sourcefiles>
+            </structure>
+            <html destdir="${jacoco.report.dir}/html"/>
+        </jacocoReport>
+    </target>
+</project>

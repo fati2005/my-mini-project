@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestionChambres.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">hotel</a> &gt; <a href="index.source.html" class="el_package">hotel</a> &gt; <span class="el_source">GestionChambres.java</span></div><h1>GestionChambres.java</h1><pre class="source lang-java linenums">package hotel;
+
+import java.sql.Connection;             // Pour la connexion à la base de données
+import java.sql.PreparedStatement;      // Pour préparer les requêtes SQL
+import java.sql.ResultSet;              // Pour récupérer les résultats SQL
+import java.sql.SQLException;           // Pour gérer les exceptions SQL
+import javax.swing.JOptionPane;         // Pour afficher des messages d'erreur ou d'information
+import javax.swing.table.DefaultTableModel;  // Pour gérer le modèle du JTable
+import javax.swing.UnsupportedLookAndFeelException;
+
+public class GestionChambres extends javax.swing.JFrame {
+private static final String ERREUR_SQL_MESSAGE = &quot;Erreur SQL : &quot;;
+
+    /**
+     * Creates new form GestionChambres
+     */
+<span class="nc" id="L17">    public GestionChambres()  {</span>
+<span class="nc" id="L18">        initComponents();</span>
+<span class="nc" id="L19">        remplirComboBoxes();</span>
+        try {
+<span class="nc" id="L21">            remplirTableau();</span>
+<span class="nc" id="L22">        } catch (SQLException e) {</span>
+<span class="nc" id="L23">            e.printStackTrace();</span>
+<span class="nc" id="L24">        }</span>
+<span class="nc" id="L25">    }</span>
+    
+    // Remplit les comboBox avec les valeurs prédéfinies
+    private void remplirComboBoxes() {
+        // Pour la disponibilité
+<span class="nc" id="L30">        cbAvailability.removeAllItems();</span>
+<span class="nc" id="L31">        cbAvailability.addItem(&quot;Available&quot;);</span>
+<span class="nc" id="L32">        cbAvailability.addItem(&quot;Occupied&quot;);</span>
+        
+        // Pour le type
+<span class="nc" id="L35">        cmbType.removeAllItems();</span>
+<span class="nc" id="L36">        cmbType.addItem(&quot;1BHK&quot;);</span>
+<span class="nc" id="L37">        cmbType.addItem(&quot;2BHK&quot;);</span>
+        
+        // Pour l'état de nettoyage
+<span class="nc" id="L40">        cbCleaningStatus.removeAllItems();</span>
+<span class="nc" id="L41">        cbCleaningStatus.addItem(&quot;Clean&quot;);</span>
+<span class="nc" id="L42">        cbCleaningStatus.addItem(&quot;Dirty&quot;);</span>
+<span class="nc" id="L43">    }</span>
+    
+    // Remplit le JTable avec les données de la base
+ private void remplirTableau() throws SQLException {
+<span class="nc" id="L47">    String[] colonnes = {&quot;N° Chambre&quot;, &quot;Type&quot;, &quot;Prix MAD&quot;, &quot;Disponibilité&quot;, &quot;Nettoyage&quot;};</span>
+<span class="nc" id="L48">    DefaultTableModel model = new DefaultTableModel(colonnes, 0);</span>
+<span class="nc" id="L49">    String query = &quot;SELECT room_number, type, price, availability, cleaning_status FROM room&quot;;</span>
+
+<span class="nc" id="L51">    try (Connection con = Conn.connect();</span>
+<span class="nc" id="L52">         PreparedStatement pst = con.prepareStatement(query);</span>
+<span class="nc" id="L53">         ResultSet rs = pst.executeQuery()) {</span>
+         
+<span class="nc bnc" id="L55" title="All 2 branches missed.">         while (rs.next()) {</span>
+<span class="nc" id="L56">             int roomNumber = rs.getInt(&quot;room_number&quot;);</span>
+<span class="nc" id="L57">             String type = rs.getString(&quot;type&quot;);</span>
+<span class="nc" id="L58">             double price = rs.getDouble(&quot;price&quot;);</span>
+<span class="nc" id="L59">             String availability = rs.getString(&quot;availability&quot;);</span>
+<span class="nc" id="L60">             String cleaningStatus = rs.getString(&quot;cleaning_status&quot;);</span>
+<span class="nc" id="L61">             model.addRow(new Object[]{roomNumber, type, price, availability, cleaningStatus});</span>
+<span class="nc" id="L62">         }</span>
+<span class="nc" id="L63">         table.setModel(model);</span>
+<span class="nc" id="L64">    } catch (Exception ex) {</span>
+<span class="nc" id="L65">         JOptionPane.showMessageDialog(this, &quot;Erreur lors du chargement des données : &quot; + ex.getMessage());</span>
+<span class="nc" id="L66">    }  </span>
+<span class="nc" id="L67">}</span>
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    // &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;Generated Code&quot;&gt;//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+<span class="nc" id="L73">        jPanel1 = new javax.swing.JPanel();</span>
+<span class="nc" id="L74">        jPanel2 = new javax.swing.JPanel();</span>
+<span class="nc" id="L75">        jLabel1 = new javax.swing.JLabel();</span>
+<span class="nc" id="L76">        btnback = new javax.swing.JButton();</span>
+<span class="nc" id="L77">        tfRoomNumber = new javax.swing.JTextField();</span>
+<span class="nc" id="L78">        tfPrice = new javax.swing.JTextField();</span>
+<span class="nc" id="L79">        cbAvailability = new javax.swing.JComboBox&lt;&gt;();</span>
+<span class="nc" id="L80">        cbCleaningStatus = new javax.swing.JComboBox&lt;&gt;();</span>
+<span class="nc" id="L81">        btnAdd = new javax.swing.JButton();</span>
+<span class="nc" id="L82">        jLabel2 = new javax.swing.JLabel();</span>
+<span class="nc" id="L83">        jLabel3 = new javax.swing.JLabel();</span>
+<span class="nc" id="L84">        jLabel4 = new javax.swing.JLabel();</span>
+<span class="nc" id="L85">        jLabel5 = new javax.swing.JLabel();</span>
+<span class="nc" id="L86">        jLabel6 = new javax.swing.JLabel();</span>
+<span class="nc" id="L87">        jLabel7 = new javax.swing.JLabel();</span>
+<span class="nc" id="L88">        cmbType = new javax.swing.JComboBox&lt;&gt;();</span>
+<span class="nc" id="L89">        jScrollPane1 = new javax.swing.JScrollPane();</span>
+<span class="nc" id="L90">        table = new javax.swing.JTable();</span>
+<span class="nc" id="L91">        btnUpdate = new javax.swing.JButton();</span>
+<span class="nc" id="L92">        btnDelete = new javax.swing.JButton();</span>
+
+<span class="nc" id="L94">        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);</span>
+
+<span class="nc" id="L96">        jPanel1.setBackground(new java.awt.Color(255, 255, 255));</span>
+
+<span class="nc" id="L98">        jPanel2.setBackground(new java.awt.Color(0, 51, 102));</span>
+
+<span class="nc" id="L100">        jLabel1.setFont(new java.awt.Font(&quot;Times New Roman&quot;, 3, 36)); // NOI18N</span>
+<span class="nc" id="L101">        jLabel1.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L102">        jLabel1.setText(&quot;Gestion Des Chambres&quot;);</span>
+
+<span class="nc" id="L104">        btnback.setBackground(new java.awt.Color(0, 51, 102));</span>
+<span class="nc" id="L105">        btnback.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L106">        btnback.setText(&quot;&lt;&quot;);</span>
+<span class="nc" id="L107">        btnback.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L109">                btnbackActionPerformed(evt);</span>
+<span class="nc" id="L110">            }</span>
+        });
+
+<span class="nc" id="L113">        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);</span>
+<span class="nc" id="L114">        jPanel2.setLayout(jPanel2Layout);</span>
+<span class="nc" id="L115">        jPanel2Layout.setHorizontalGroup(</span>
+<span class="nc" id="L116">            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L117">            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()</span>
+<span class="nc" id="L118">                .addContainerGap()</span>
+<span class="nc" id="L119">                .addComponent(btnback)</span>
+<span class="nc" id="L120">                .addGap(199, 199, 199)</span>
+<span class="nc" id="L121">                .addComponent(jLabel1)</span>
+<span class="nc" id="L122">                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))</span>
+        );
+<span class="nc" id="L124">        jPanel2Layout.setVerticalGroup(</span>
+<span class="nc" id="L125">            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L126">            .addGroup(jPanel2Layout.createSequentialGroup()</span>
+<span class="nc" id="L127">                .addGap(22, 22, 22)</span>
+<span class="nc" id="L128">                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L129">                    .addComponent(btnback)</span>
+<span class="nc" id="L130">                    .addComponent(jLabel1))</span>
+<span class="nc" id="L131">                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))</span>
+        );
+
+<span class="nc" id="L134">        tfRoomNumber.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L136">                tfRoomNumberActionPerformed(evt);</span>
+<span class="nc" id="L137">            }</span>
+        });
+
+<span class="nc" id="L140">        cbAvailability.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;, &quot;Item 4&quot; }));</span>
+
+<span class="nc" id="L142">        cbCleaningStatus.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;, &quot;Item 4&quot; }));</span>
+
+<span class="nc" id="L144">        btnAdd.setBackground(new java.awt.Color(0, 51, 153));</span>
+<span class="nc" id="L145">        btnAdd.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 3, 12)); // NOI18N</span>
+<span class="nc" id="L146">        btnAdd.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L147">        btnAdd.setText(&quot;Ajouter&quot;);</span>
+<span class="nc" id="L148">        btnAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(204, 204, 204), null, null));</span>
+<span class="nc" id="L149">        btnAdd.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L151">                btnAddActionPerformed(evt);</span>
+<span class="nc" id="L152">            }</span>
+        });
+
+<span class="nc" id="L155">        jLabel3.setForeground(new java.awt.Color(204, 204, 204));</span>
+<span class="nc" id="L156">        jLabel3.setText(&quot;N° Chambre :&quot;);</span>
+
+<span class="nc" id="L158">        jLabel4.setForeground(new java.awt.Color(204, 204, 204));</span>
+<span class="nc" id="L159">        jLabel4.setText(&quot;Nettoyage :&quot;);</span>
+
+<span class="nc" id="L161">        jLabel5.setForeground(new java.awt.Color(204, 204, 204));</span>
+<span class="nc" id="L162">        jLabel5.setText(&quot;Prix MAD :&quot;);</span>
+
+<span class="nc" id="L164">        jLabel6.setForeground(new java.awt.Color(204, 204, 204));</span>
+<span class="nc" id="L165">        jLabel6.setText(&quot;Type :&quot;);</span>
+
+<span class="nc" id="L167">        jLabel7.setForeground(new java.awt.Color(204, 204, 204));</span>
+<span class="nc" id="L168">        jLabel7.setText(&quot;Disponibilité :&quot;);</span>
+
+<span class="nc" id="L170">        cmbType.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;, &quot;Item 4&quot; }));</span>
+
+<span class="nc" id="L172">        table.setBackground(new java.awt.Color(0, 51, 102));</span>
+<span class="nc" id="L173">        table.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L174">        table.setModel(new javax.swing.table.DefaultTableModel(</span>
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                &quot;room_number&quot;, &quot;type&quot;, &quot;price&quot;, &quot;availability&quot;, &quot;cleaning_status&quot;
+            }
+<span class="nc" id="L184">        ) {</span>
+<span class="nc" id="L185">            boolean[] canEdit = new boolean [] {</span>
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+<span class="nc" id="L190">                return canEdit [columnIndex];</span>
+            }
+        });
+<span class="nc" id="L193">        jScrollPane1.setViewportView(table);</span>
+
+<span class="nc" id="L195">        btnUpdate.setBackground(new java.awt.Color(255, 204, 0));</span>
+<span class="nc" id="L196">        btnUpdate.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 12)); // NOI18N</span>
+<span class="nc" id="L197">        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L198">        btnUpdate.setText(&quot;Modifier&quot;);</span>
+<span class="nc" id="L199">        btnUpdate.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(204, 204, 204), null, null));</span>
+<span class="nc" id="L200">        btnUpdate.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L202">                btnUpdateActionPerformed(evt);</span>
+<span class="nc" id="L203">            }</span>
+        });
+
+<span class="nc" id="L206">        btnDelete.setBackground(new java.awt.Color(255, 51, 51));</span>
+<span class="nc" id="L207">        btnDelete.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 12)); // NOI18N</span>
+<span class="nc" id="L208">        btnDelete.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L209">        btnDelete.setText(&quot;Supprimer&quot;);</span>
+<span class="nc" id="L210">        btnDelete.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(204, 204, 204), null, null));</span>
+<span class="nc" id="L211">        btnDelete.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L213">                btnDeleteActionPerformed(evt);</span>
+<span class="nc" id="L214">            }</span>
+        });
+
+<span class="nc" id="L217">        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);</span>
+<span class="nc" id="L218">        jPanel1.setLayout(jPanel1Layout);</span>
+<span class="nc" id="L219">        jPanel1Layout.setHorizontalGroup(</span>
+<span class="nc" id="L220">            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L221">            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+<span class="nc" id="L222">            .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L223">                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L224">                    .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L225">                        .addGap(45, 45, 45)</span>
+<span class="nc" id="L226">                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L227">                    .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L228">                        .addContainerGap()</span>
+<span class="nc" id="L229">                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L230">                            .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L231">                                .addComponent(jLabel3)</span>
+<span class="nc" id="L232">                                .addGap(0, 0, Short.MAX_VALUE))</span>
+<span class="nc" id="L233">                            .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L234">                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L235">                                    .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L236">                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L237">                                            .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L238">                                                .addGap(6, 6, 6)</span>
+<span class="nc" id="L239">                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L240">                                                    .addComponent(jLabel4)</span>
+<span class="nc" id="L241">                                                    .addComponent(tfRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L242">                                                    .addComponent(cbCleaningStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L243">                                                    .addComponent(jLabel6)</span>
+<span class="nc" id="L244">                                                    .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L245">                                                    .addComponent(jLabel5)))</span>
+<span class="nc" id="L246">                                            .addComponent(tfPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L247">                                            .addComponent(jLabel7)</span>
+<span class="nc" id="L248">                                            .addComponent(cbAvailability, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L249">                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))</span>
+<span class="nc" id="L250">                                    .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L251">                                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L252">                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+<span class="nc" id="L253">                                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L254">                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)</span>
+<span class="nc" id="L255">                                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L256">                                        .addGap(39, 39, 39)))</span>
+<span class="nc" id="L257">                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)))))</span>
+<span class="nc" id="L258">                .addContainerGap())</span>
+        );
+<span class="nc" id="L260">        jPanel1Layout.setVerticalGroup(</span>
+<span class="nc" id="L261">            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L262">            .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L263">                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L264">                .addGap(22, 22, 22)</span>
+<span class="nc" id="L265">                .addComponent(jLabel2)</span>
+<span class="nc" id="L266">                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)</span>
+<span class="nc" id="L267">                .addComponent(jLabel3)</span>
+<span class="nc" id="L268">                .addGap(12, 12, 12)</span>
+<span class="nc" id="L269">                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L270">                    .addGroup(jPanel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L271">                        .addComponent(tfRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L272">                        .addGap(18, 18, 18)</span>
+<span class="nc" id="L273">                        .addComponent(jLabel4)</span>
+<span class="nc" id="L274">                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)</span>
+<span class="nc" id="L275">                        .addComponent(cbCleaningStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L276">                        .addGap(18, 18, 18)</span>
+<span class="nc" id="L277">                        .addComponent(jLabel6)</span>
+<span class="nc" id="L278">                        .addGap(7, 7, 7)</span>
+<span class="nc" id="L279">                        .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L280">                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)</span>
+<span class="nc" id="L281">                        .addComponent(jLabel5)</span>
+<span class="nc" id="L282">                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)</span>
+<span class="nc" id="L283">                        .addComponent(tfPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L284">                        .addGap(18, 18, 18)</span>
+<span class="nc" id="L285">                        .addComponent(jLabel7)</span>
+<span class="nc" id="L286">                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)</span>
+<span class="nc" id="L287">                        .addComponent(cbAvailability, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L288">                        .addGap(18, 18, 18)</span>
+<span class="nc" id="L289">                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)</span>
+<span class="nc" id="L290">                            .addComponent(btnAdd)</span>
+<span class="nc" id="L291">                            .addComponent(btnUpdate)</span>
+<span class="nc" id="L292">                            .addComponent(btnDelete)))</span>
+<span class="nc" id="L293">                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L294">                .addContainerGap(34, Short.MAX_VALUE))</span>
+        );
+
+<span class="nc" id="L297">        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());</span>
+<span class="nc" id="L298">        getContentPane().setLayout(layout);</span>
+<span class="nc" id="L299">        layout.setHorizontalGroup(</span>
+<span class="nc" id="L300">            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L301">            .addGroup(layout.createSequentialGroup()</span>
+<span class="nc" id="L302">                .addContainerGap()</span>
+<span class="nc" id="L303">                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+<span class="nc" id="L304">                .addContainerGap())</span>
+        );
+<span class="nc" id="L306">        layout.setVerticalGroup(</span>
+<span class="nc" id="L307">            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L308">            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+        );
+
+<span class="nc" id="L311">        pack();</span>
+<span class="nc" id="L312">    }// &lt;/editor-fold&gt;//GEN-END:initComponents</span>
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+<span class="nc" id="L315">           String query = &quot;INSERT INTO room (room_number, type, price, availability, cleaning_status) VALUES (?, ?, ?, ?, ?)&quot;;</span>
+<span class="nc" id="L316">    try (Connection con = Conn.connect();</span>
+<span class="nc" id="L317">         PreparedStatement pst = con.prepareStatement(query)) {</span>
+        
+        // Récupération et conversion des valeurs des champs
+<span class="nc" id="L320">        int roomNumber = Integer.parseInt(tfRoomNumber.getText());</span>
+<span class="nc" id="L321">        String type = cmbType.getSelectedItem().toString();</span>
+<span class="nc" id="L322">        double price = Double.parseDouble(tfPrice.getText());</span>
+<span class="nc" id="L323">        String availability = cbAvailability.getSelectedItem().toString();</span>
+<span class="nc" id="L324">        String cleaningStatus = cbCleaningStatus.getSelectedItem().toString();</span>
+        
+        // Affectation des valeurs aux paramètres de la requête
+<span class="nc" id="L327">        pst.setInt(1, roomNumber);</span>
+<span class="nc" id="L328">        pst.setString(2, type);</span>
+<span class="nc" id="L329">        pst.setDouble(3, price);</span>
+<span class="nc" id="L330">        pst.setString(4, availability);</span>
+<span class="nc" id="L331">        pst.setString(5, cleaningStatus);</span>
+        
+        // Exécution de l'insertion
+<span class="nc" id="L334">        pst.executeUpdate();</span>
+<span class="nc" id="L335">        JOptionPane.showMessageDialog(this, &quot;Chambre ajoutée !&quot;);</span>
+<span class="nc" id="L336">    } catch (Exception ex) {</span>
+<span class="nc" id="L337">       JOptionPane.showMessageDialog(this, ERREUR_SQL_MESSAGE + ex.getMessage());</span>
+
+<span class="nc" id="L339">    }</span>
+<span class="nc" id="L340">    }//GEN-LAST:event_btnAddActionPerformed</span>
+
+    private void tfRoomNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfRoomNumberActionPerformed
+        // TODO add your handling code here:
+<span class="nc" id="L344">    }//GEN-LAST:event_tfRoomNumberActionPerformed</span>
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+<span class="nc" id="L347">   try (Connection con = Conn.connect();</span>
+<span class="nc" id="L348">         PreparedStatement pst = con.prepareStatement(</span>
+            &quot;UPDATE room SET type=?, price=?, availability=?, cleaning_status=? WHERE room_number=?&quot;)) {
+        
+<span class="nc" id="L351">        String type = cmbType.getSelectedItem().toString();</span>
+<span class="nc" id="L352">        double price = Double.parseDouble(tfPrice.getText());</span>
+<span class="nc" id="L353">        String availability = cbAvailability.getSelectedItem().toString();</span>
+<span class="nc" id="L354">        String cleaningStatus = cbCleaningStatus.getSelectedItem().toString();</span>
+<span class="nc" id="L355">        int roomNumber = Integer.parseInt(tfRoomNumber.getText());</span>
+        
+<span class="nc" id="L357">        pst.setString(1, type);</span>
+<span class="nc" id="L358">        pst.setDouble(2, price);</span>
+<span class="nc" id="L359">        pst.setString(3, availability);</span>
+<span class="nc" id="L360">        pst.setString(4, cleaningStatus);</span>
+<span class="nc" id="L361">        pst.setInt(5, roomNumber);</span>
+        
+<span class="nc" id="L363">        int rowsAffected = pst.executeUpdate();</span>
+<span class="nc bnc" id="L364" title="All 2 branches missed.">        if (rowsAffected &gt; 0) {</span>
+<span class="nc" id="L365">            JOptionPane.showMessageDialog(this, &quot;Chambre modifiée !&quot;);</span>
+        } else {
+<span class="nc" id="L367">            JOptionPane.showMessageDialog(this, &quot;Chambre non trouvée !&quot;);</span>
+        }
+<span class="nc" id="L369">        remplirTableau();</span>
+<span class="nc" id="L370">    } catch (Exception ex) {</span>
+<span class="nc" id="L371">       JOptionPane.showMessageDialog(this, ERREUR_SQL_MESSAGE + ex.getMessage());</span>
+
+<span class="nc" id="L373">    }</span>
+<span class="nc" id="L374">    }//GEN-LAST:event_btnUpdateActionPerformed</span>
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+<span class="nc" id="L377">      try (Connection con = Conn.connect();</span>
+<span class="nc" id="L378">         PreparedStatement pst = con.prepareStatement(&quot;DELETE FROM room WHERE room_number=?&quot;)) {</span>
+         
+<span class="nc" id="L380">         int roomNumber = Integer.parseInt(tfRoomNumber.getText());</span>
+<span class="nc" id="L381">         pst.setInt(1, roomNumber);</span>
+         
+<span class="nc" id="L383">         int rowsAffected = pst.executeUpdate();</span>
+<span class="nc bnc" id="L384" title="All 2 branches missed.">         if (rowsAffected &gt; 0) {</span>
+<span class="nc" id="L385">             JOptionPane.showMessageDialog(this, &quot;Chambre supprimée !&quot;);</span>
+         } else {
+<span class="nc" id="L387">             JOptionPane.showMessageDialog(this, &quot;Chambre non trouvée !&quot;);</span>
+         }
+<span class="nc" id="L389">         remplirTableau();</span>
+<span class="nc" id="L390">    } catch (Exception ex) {</span>
+<span class="nc" id="L391">        JOptionPane.showMessageDialog(this, ERREUR_SQL_MESSAGE + ex.getMessage());</span>
+
+<span class="nc" id="L393">    }</span>
+<span class="nc" id="L394">    }//GEN-LAST:event_btnDeleteActionPerformed</span>
+
+    private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
+<span class="nc" id="L397">          AccueilAdmin accueil = new AccueilAdmin();</span>
+<span class="nc" id="L398">    accueil.setVisible(true);</span>
+<span class="nc" id="L399">    this.dispose();</span>
+<span class="nc" id="L400">    }//GEN-LAST:event_btnbackActionPerformed</span>
+
+    /**
+     * @param args the command line arguments
+     */
+           public static void main(String [] args) {
+        /* Set the Nimbus look and feel */
+        try {
+<span class="nc bnc" id="L408" title="All 2 branches missed.">            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {</span>
+<span class="nc bnc" id="L409" title="All 2 branches missed.">                if (&quot;Nimbus&quot;.equals(info.getName())) {</span>
+<span class="nc" id="L410">                    javax.swing.UIManager.setLookAndFeel(info.getClassName());</span>
+<span class="nc" id="L411">                    break;</span>
+                }
+            }
+<span class="nc" id="L414">        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {</span>
+<span class="nc" id="L415">            java.util.logging.Logger.getLogger(GestionChambres.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
+<span class="nc" id="L416">        }</span>
+
+        // Run the application in the EventQueue thread
+<span class="nc" id="L419">        java.awt.EventQueue.invokeLater(() -&gt; new GestionChambres().setVisible(true));</span>
+<span class="nc" id="L420">    }</span>
+   
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnback;
+    private javax.swing.JComboBox&lt;String&gt; cbAvailability;
+    private javax.swing.JComboBox&lt;String&gt; cbCleaningStatus;
+    private javax.swing.JComboBox&lt;String&gt; cmbType;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable table;
+    private javax.swing.JTextField tfPrice;
+    private javax.swing.JTextField tfRoomNumber;
+    // End of variables declaration//GEN-END:variables
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
